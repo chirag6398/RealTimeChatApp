@@ -14,9 +14,19 @@ app.use(express.static(path.resolve(__dirname, "../../client/build")));
 app.get("*", function (req, res) {
     res.sendFile(path.resolve(__dirname, "../../client/build", "index.html"));
   });
+let count=0;
 
-io.on('connection',()=>{
-    console.log("new websocket connection")
+io.on('connection',(socket)=>{
+    console.log("new websocket connection");
+    socket.emit("countUpdated",count);
+    socket.on("increment",()=>{
+       count++;
+       io.emit("countUpdated",count);
+    });
+    socket.on("geoLocation",(data)=>{
+        console.log(data);
+
+    });
 })
 
 
