@@ -1,9 +1,12 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect,useRef} from 'react';
 import {io} from "socket.io-client";
 
 export default function Home() {
 const [socket,setSocket]=useState(null);
 const [message,setMessage]=useState("");
+const [sending,setSending]=useState(false);
+
+let inputField=useRef(null);
 useEffect(()=>{
     setSocket(io("ws://localhost:5000"));
 },[]);
@@ -38,11 +41,17 @@ const getLocationHandler=()=>{
     }
 }
 
-const submitHandler=()=>{
+const submitHandler=(e)=>{
+    e.preventDefault();
+    
+    setSending(true);
     socket.emit("sendMessage",message,(acknowledge)=>{
+        setSending(false);
+        console.log(inputField)
+        // inputField.current.focus();
         console.log(`message has been ${acknowledge} successfully`);
     });
-    console.log(message);
+  
     setMessage("");
 
 }
@@ -52,8 +61,11 @@ const submitHandler=()=>{
                 <span>Chat App</span>
                 <button id="increment" onClick={clickHandler} >increment</button>
                  <button onClick={getLocationHandler}>getLocation</button>
-                 <input type="text" value={message} onChange={(e)=>setMessage(e.target.value)} />
-                 <button  onClick={submitHandler} >send</button>
+                 <form onSubmit={submitHandler} >
+                 <input ref={(el)=>inputField=el}  type="text" value={message} onChange={(e)=>setMessage(e.target.value)} />
+                 <button type="submit" disabled={sending} >{sending?"sending":"send"}</button>
+                 </form>
+                
             </div>
            
         </div>
