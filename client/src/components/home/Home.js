@@ -1,6 +1,6 @@
 import React,{useState,useEffect,useRef} from 'react';
 import {io} from "socket.io-client";
-
+import "../../styles/home.scss";
 export default function Home() {
 const [socket,setSocket]=useState(null);
 const [message,setMessage]=useState("");

@@ -16,7 +16,6 @@ app.get("*", function (req, res) {
   });
 let count=0;
 
-
 io.on('connection',(socket)=>{
     console.log("new websocket connection");
     socket.emit("message","welcome");

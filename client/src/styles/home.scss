@@ -1,0 +1,9 @@
+@import "../scss//mixins.scss";
+.home__extDiv{
+    @include displayFlexCol;
+    width: 100vw;
+    height: 100vh;
+    
+
+    
+}
