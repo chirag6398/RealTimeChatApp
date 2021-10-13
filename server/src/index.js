@@ -18,15 +18,25 @@ let count=0;
 
 io.on('connection',(socket)=>{
     console.log("new websocket connection");
+    socket.emit("message","welcome");
+    socket.broadcast.emit("message","a new user has joined");
     socket.emit("countUpdated",count);
+
     socket.on("increment",()=>{
        count++;
        io.emit("countUpdated",count);
     });
+
+    socket.on("sendMessage",(message)=>{
+        io.emit("message",`type message is : ${message}`);
+    })
     socket.on("geoLocation",(data)=>{
         console.log(data);
-
     });
+
+    socket.on("disconnect",()=>{
+        io.emit("message","a user has left");
+    })
 })
 
 
