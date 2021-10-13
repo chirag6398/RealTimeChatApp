@@ -27,11 +27,12 @@ io.on('connection',(socket)=>{
        io.emit("countUpdated",count);
     });
 
-    socket.on("sendMessage",(message)=>{
+    socket.on("sendMessage",(message,next)=>{
         io.emit("message",`type message is : ${message}`);
+        next("Delivered!")
     })
     socket.on("geoLocation",(data)=>{
-        console.log(data);
+        io.emit("message",`https://google.com/maps?q=${data.Long},${data.Latit}`);
     });
 
     socket.on("disconnect",()=>{

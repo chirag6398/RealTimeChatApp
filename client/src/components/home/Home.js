@@ -39,7 +39,9 @@ const getLocationHandler=()=>{
 }
 
 const submitHandler=()=>{
-    socket.emit("sendMessage",message);
+    socket.emit("sendMessage",message,(acknowledge)=>{
+        console.log(`message has been ${acknowledge} successfully`);
+    });
     console.log(message);
     setMessage("");
 
