@@ -69,22 +69,36 @@ const submitHandler=(e)=>{
 }
     return (
         <div className="home__extDiv">
-            <div className="home__mainDiv">
-                <span>Chat App</span>
+            <div className="home__sideBar"></div>
+            <div className="home__msgPart">
+          
+                <div className="home__messages">
                 {messages?.map((value)=>{
                     return <span>{value.msgTime}- {value.msg}</span>
                 })}
                 {
                     locationLink?<a href={locationLink.toString()} target="_blank">The current Location</a>:null
                 }
-                <button id="increment" onClick={clickHandler} >increment</button>
-                 <button onClick={getLocationHandler}>getLocation</button>
-                 <form onSubmit={submitHandler} >
+                </div>
+                <div className="home__msg__bottom">
+                    <div className="home__inputForm">
+                    <form onSubmit={submitHandler} >
                  <input   type="text" value={message} onChange={(e)=>setMessage(e.target.value)} />
                  <button type="submit" disabled={sending} >{sending?"sending":"send"}</button>
                  </form>
+                    </div>
+               <div className="home__locationButton">
+               <button onClick={getLocationHandler}>getLocation</button>
+               </div>
+                
+                </div>
+                {/* <button id="increment" onClick={clickHandler} >increment</button> */}
+                
+                 
                 
             </div>
+            
+           
            
         </div>
     )
