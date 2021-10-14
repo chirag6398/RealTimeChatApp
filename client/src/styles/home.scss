@@ -4,7 +4,7 @@
     @include displayFlexRow;
     width: 100vw;
     height: 100vh;
-    // padding: 20px;
+    
     background-color: $bg-color;
     .home__sideBar{
         flex: 0.3;
@@ -12,7 +12,8 @@
         height: 90%;
         background-color:$side-bar-color;
         overflow-y: scroll;
-
+        margin-left: 10px;
+        min-width: 271px;
         &::-webkit-scrollbar{
             display: none;
         }
@@ -20,6 +21,9 @@
     .home__msgPart{
         flex:0.7;
         height: 90%;
+        margin-right: 10px;
+        padding: 10px;
+        min-width: 379px;
         background-color: $msg-bg-color;
         display: flex;
         flex-direction: column;
@@ -44,6 +48,10 @@
                        height: 40px;
                        border: none;
                        outline: none;
+                       padding-left: 10px;
+                       font-family:$msg-font;
+                       color: #000;
+                       font-weight: 900;
                    }
 
                    & button{
@@ -58,7 +66,7 @@
             .home__locationButton{
 
                 button{
-                    width: 100%;
+                    width: 85px;
                     height: 100%;
                     border: none;
                     outline: none;
@@ -70,3 +78,13 @@
 
     
 }
+
+// @media (max-width:651px) {
+//     // .home__sideBar{
+//     //     flex: 1;
+//     // }
+//     // .home__msgPart{
+//     //     flex: 1;
+//     // }
+    
+// }

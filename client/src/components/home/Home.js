@@ -83,7 +83,7 @@ const submitHandler=(e)=>{
                 <div className="home__msg__bottom">
                     <div className="home__inputForm">
                     <form onSubmit={submitHandler} >
-                 <input   type="text" value={message} onChange={(e)=>setMessage(e.target.value)} />
+                 <input   type="text" placeholder="your message" value={message} onChange={(e)=>setMessage(e.target.value)} />
                  <button type="submit" disabled={sending} >{sending?"sending":"send"}</button>
                  </form>
                     </div>
