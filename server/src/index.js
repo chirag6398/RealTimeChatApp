@@ -29,8 +29,10 @@ io.on('connection',(socket)=>{
 
     socket.on("sendMessage",(message,next)=>{
         io.emit("message",`type message is : ${message}`);
+        io.emit("messageArray",message);
         next("Delivered!")
     })
+
     socket.on("geoLocation",(data)=>{
         io.emit("message",`https://google.com/maps?q=${data.Long},${data.Latit}`);
     });
@@ -39,6 +41,7 @@ io.on('connection',(socket)=>{
         io.emit("message","a user has left");
     })
 })
+
 
 
 
