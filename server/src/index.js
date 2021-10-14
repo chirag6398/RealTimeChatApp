@@ -29,12 +29,14 @@ io.on('connection',(socket)=>{
 
     socket.on("sendMessage",(message,next)=>{
         io.emit("message",`type message is : ${message}`);
-        io.emit("messageArray",message);
+        let messageTime=new Date().toLocaleTimeString();
+        // console.log(messageTime);
+        io.emit("messageArray",message,messageTime);
         next("Delivered!")
     })
 
     socket.on("geoLocation",(data)=>{
-        io.emit("message",`https://google.com/maps?q=${data.Long},${data.Latit}`);
+        io.emit("sendLocationUrl",`https://google.com/maps?q=${data.Long},${data.Latit}`);
     });
 
     socket.on("disconnect",()=>{

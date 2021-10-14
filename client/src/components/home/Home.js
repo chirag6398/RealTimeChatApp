@@ -1,22 +1,35 @@
-import React,{useState,useEffect,useRef} from 'react';
+import React,{useState,useEffect} from 'react';
 import {io} from "socket.io-client";
 import "../../styles/home.scss";
 export default function Home() {
 const [socket,setSocket]=useState(null);
 const [message,setMessage]=useState("");
 const [sending,setSending]=useState(false);
-
-let inputField=useRef(null);
+const [messages,setMessages]=useState([]);
+const [locationLink,setLocationLink]=useState(undefined);
 useEffect(()=>{
     setSocket(io("ws://localhost:5000"));
 },[]);
 
 useEffect(()=>{
+
     socket?.on("countUpdated",(count)=>{
         console.log("the count has been updated",count);
     });
+
     socket?.on("message",(message)=>{
         console.log(message);
+    });
+
+    socket?.on("sendLocationUrl",(url)=>{
+        setLocationLink(url);
+    })
+    socket?.on("messageArray",(msg,msgTime)=>{
+        let newArray=messages;
+        newArray.push({msg,msgTime});
+        console.log(newArray)
+        setMessages(newArray);
+        
     })
 
 },[socket]);
@@ -47,8 +60,7 @@ const submitHandler=(e)=>{
     setSending(true);
     socket.emit("sendMessage",message,(acknowledge)=>{
         setSending(false);
-        console.log(inputField)
-        // inputField.current.focus();
+       
         console.log(`message has been ${acknowledge} successfully`);
     });
   
@@ -59,10 +71,16 @@ const submitHandler=(e)=>{
         <div className="home__extDiv">
             <div className="home__mainDiv">
                 <span>Chat App</span>
+                {messages?.map((value)=>{
+                    return <span>{value.msgTime}- {value.msg}</span>
+                })}
+                {
+                    locationLink?<a href={locationLink.toString()} target="_blank">The current Location</a>:null
+                }
                 <button id="increment" onClick={clickHandler} >increment</button>
                  <button onClick={getLocationHandler}>getLocation</button>
                  <form onSubmit={submitHandler} >
-                 <input ref={(el)=>inputField=el}  type="text" value={message} onChange={(e)=>setMessage(e.target.value)} />
+                 <input   type="text" value={message} onChange={(e)=>setMessage(e.target.value)} />
                  <button type="submit" disabled={sending} >{sending?"sending":"send"}</button>
                  </form>
                 

@@ -4,6 +4,9 @@
     width: 100vw;
     height: 100vh;
     
+    .home__mainDiv{
+        @include displayFlexCol;
+    }
 
     
 }
