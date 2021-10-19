@@ -20,26 +20,39 @@ let count=0;
 
 io.on('connection',(socket)=>{
     console.log("new websocket connection");
-    socket.emit("message","welcome");
-    socket.broadcast.emit("message","a new user has joined");
+   
+    
     socket.emit("countUpdated",count);
 
+    socket.on('join',({username,room})=>{
+        socket.join(room);
+        console.log(room,username)
+
+        socket.to(room).emit("message","welcome");
+
+        socket.broadcast.to(room).emit("message",`${username} has joined!`);
+    })
+
     socket.on("increment",()=>{
-       count++;
+    //    count++;
        io.emit("countUpdated",count);
     });
 
-    socket.on("sendMessage",(message,next)=>{
-        io.emit("message",`type message is : ${message}`);
+    
+    socket.on("sendMessage",({message,room,username},next)=>{
+        // io.emit("message",`type message is : ${message}`);
         let messageTime=new Date().toLocaleTimeString();
        
-        io.emit("messageArray",message,messageTime);
+        io.to(room).emit("messageArray",message,messageTime,username);
+
         next("Delivered!")
     })
 
+
     socket.on("geoLocation",(data)=>{
-        io.emit("sendLocationUrl",`https://google.com/maps?q=${data.Long},${data.Latit}`);
+        io.to(data.room).emit("sendLocationUrl",`https://google.com/maps?q=${data.Long},${data.Latit}`);
     });
+
 
     socket.on("disconnect",()=>{
         io.emit("message","a user has left");
