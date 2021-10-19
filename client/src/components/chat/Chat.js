@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react';
 import {io} from "socket.io-client";
-import "../../styles/home.scss";
-export default function Home() {
+import "../../styles/chat.scss";
+export default function Chat() {
 const [socket,setSocket]=useState(null);
 const [message,setMessage]=useState("");
 const [sending,setSending]=useState(false);
@@ -68,11 +68,11 @@ const submitHandler=(e)=>{
 
 }
     return (
-        <div className="home__extDiv">
-            <div className="home__sideBar"></div>
-            <div className="home__msgPart">
+        <div className="chat__extDiv">
+            <div className="chat__sideBar"></div>
+            <div className="chat__msgPart">
           
-                <div className="home__messages">
+                <div className="chat__messages">
                 {messages?.map((value)=>{
                     return <span>{value.msgTime}- {value.msg}</span>
                 })}
@@ -80,14 +80,14 @@ const submitHandler=(e)=>{
                     locationLink?<a href={locationLink.toString()} target="_blank">The current Location</a>:null
                 }
                 </div>
-                <div className="home__msg__bottom">
-                    <div className="home__inputForm">
+                <div className="chat__msg__bottom">
+                    <div className="chat__inputForm">
                     <form onSubmit={submitHandler} >
                  <input   type="text" placeholder="your message" value={message} onChange={(e)=>setMessage(e.target.value)} />
                  <button type="submit" disabled={sending} >{sending?"sending":"send"}</button>
                  </form>
                     </div>
-               <div className="home__locationButton">
+               <div className="chat__locationButton">
                <button onClick={getLocationHandler}>getLocation</button>
                </div>
                 

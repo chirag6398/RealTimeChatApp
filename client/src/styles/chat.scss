@@ -1,12 +1,12 @@
 @import "../scss//mixins.scss";
 @import "../scss/variables";
-.home__extDiv{
+.chat__extDiv{
     @include displayFlexRow;
     width: 100vw;
     height: 100vh;
     
     background-color: $bg-color;
-    .home__sideBar{
+    .chat__sideBar{
         flex: 0.3;
         display: flex;
         height: 90%;
@@ -18,7 +18,7 @@
             display: none;
         }
     }
-    .home__msgPart{
+    .chat__msgPart{
         flex:0.7;
         height: 90%;
         margin-right: 10px;
@@ -29,7 +29,7 @@
         flex-direction: column;
         justify-content: space-between;
 
-        .home__messages{
+        .chat__messages{
             display: flex;
             flex-direction: column;
             width: 50%;
@@ -46,11 +46,11 @@
             }
         }
 
-        .home__msg__bottom{
+        .chat__msg__bottom{
             display: flex;
             
 
-            .home__inputForm{
+            .chat__inputForm{
                 display: flex;
                 flex: 1;
 
@@ -80,7 +80,7 @@
                }
             }
 
-            .home__locationButton{
+            .chat__locationButton{
 
                 button{
                     width: 85px;
@@ -97,10 +97,10 @@
 }
 
 // @media (max-width:651px) {
-//     // .home__sideBar{
+//     // .chat__sideBar{
 //     //     flex: 1;
 //     // }
-//     // .home__msgPart{
+//     // .chat__msgPart{
 //     //     flex: 1;
 //     // }
     
