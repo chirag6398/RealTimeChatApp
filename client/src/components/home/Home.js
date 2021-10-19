@@ -34,10 +34,10 @@ useEffect(()=>{
 
 },[socket]);
 
-const clickHandler=()=>{
-    console.log("clicked");
-    socket.emit("increment")
-};
+// const clickHandler=()=>{
+//     console.log("clicked");
+//     socket.emit("increment")
+// };
 
 const getLocationHandler=()=>{
     if(!navigator.geolocation){

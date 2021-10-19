@@ -29,6 +29,23 @@
         flex-direction: column;
         justify-content: space-between;
 
+        .home__messages{
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            padding-bottom: 10px;
+            overflow-y: scroll;
+
+            &::-webkit-scrollbar{
+                display: none;
+            }
+
+
+            & span{
+                padding: 10px;
+            }
+        }
+
         .home__msg__bottom{
             display: flex;
             

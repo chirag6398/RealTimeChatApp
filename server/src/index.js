@@ -14,6 +14,8 @@ app.use(express.static(path.resolve(__dirname, "../../client/build")));
 app.get("*", function (req, res) {
     res.sendFile(path.resolve(__dirname, "../../client/build", "index.html"));
   });
+  
+
 let count=0;
 
 io.on('connection',(socket)=>{
@@ -30,7 +32,7 @@ io.on('connection',(socket)=>{
     socket.on("sendMessage",(message,next)=>{
         io.emit("message",`type message is : ${message}`);
         let messageTime=new Date().toLocaleTimeString();
-        // console.log(messageTime);
+       
         io.emit("messageArray",message,messageTime);
         next("Delivered!")
     })
