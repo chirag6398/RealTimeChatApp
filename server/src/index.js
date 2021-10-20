@@ -28,7 +28,7 @@ io.on('connection',(socket)=>{
         socket.join(room);
         console.log(room,username)
 
-        socket.to(room).emit("message","welcome");
+        socket.emit("message","welcome");
 
         socket.broadcast.to(room).emit("message",`${username} has joined!`);
     })

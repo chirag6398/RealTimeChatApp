@@ -1,5 +1,6 @@
 import React,{useState,useEffect} from 'react';
 import {io} from "socket.io-client";
+import { useParams } from 'react-router';
 import "../../styles/chat.scss";
 export default function Chat() {
 const [socket,setSocket]=useState(null);
@@ -7,8 +8,16 @@ const [message,setMessage]=useState("");
 const [sending,setSending]=useState(false);
 const [messages,setMessages]=useState([]);
 const [locationLink,setLocationLink]=useState(undefined);
+const {username,room}=useParams();
+
+
+
+
+
 useEffect(()=>{
     setSocket(io("ws://localhost:5000"));
+
+    
 },[]);
 
 useEffect(()=>{
@@ -24,13 +33,21 @@ useEffect(()=>{
     socket?.on("sendLocationUrl",(url)=>{
         setLocationLink(url);
     })
-    socket?.on("messageArray",(msg,msgTime)=>{
+    socket?.on("messageArray",(msg,msgTime,username)=>{
+        let tm=msgTime.split(':');
+        let isDay=tm[2].split(' ');
+
+        msgTime=`${tm[0]}:${tm[1]} ${isDay[1]}`;
+        
         let newArray=messages;
-        newArray.push({msg,msgTime});
-        console.log(newArray)
+        newArray.push({msg,msgTime,username});
+      
         setMessages(newArray);
+        console.log(messages)
         
     })
+
+    socket?.emit('join',{username,room})
 
 },[socket]);
 
@@ -44,10 +61,12 @@ const getLocationHandler=()=>{
         console.log("can not access location");
     }else{
         navigator.geolocation.getCurrentPosition((position)=>{
-             console.log(position);
+             
              socket.emit("geoLocation",{
                 Long:position.coords.longitude,
-                Latit:position.coords.latitude
+                Latit:position.coords.latitude,
+                room,
+                username
             })
         })
       
@@ -58,7 +77,7 @@ const submitHandler=(e)=>{
     e.preventDefault();
     
     setSending(true);
-    socket.emit("sendMessage",message,(acknowledge)=>{
+    socket.emit("sendMessage",{message,room,username},(acknowledge)=>{
         setSending(false);
        
         console.log(`message has been ${acknowledge} successfully`);
@@ -74,7 +93,9 @@ const submitHandler=(e)=>{
           
                 <div className="chat__messages">
                 {messages?.map((value)=>{
-                    return <span>{value.msgTime}- {value.msg}</span>
+                    return <div>{value.username}
+                    <span>{value.msg} {value.msgTime}</span>
+                    </div>
                 })}
                 {
                     locationLink?<a href={locationLink.toString()} target="_blank">The current Location</a>:null
@@ -103,3 +124,4 @@ const submitHandler=(e)=>{
         </div>
     )
 }
+
