@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from 'react';
 import {io} from "socket.io-client";
-import { useParams } from 'react-router';
+import { useParams,useHistory } from 'react-router';
 import "../../styles/chat.scss";
 export default function Chat() {
 const [socket,setSocket]=useState(null);
@@ -9,7 +9,7 @@ const [sending,setSending]=useState(false);
 const [messages,setMessages]=useState([]);
 const [locationLink,setLocationLink]=useState(undefined);
 const {username,room}=useParams();
-
+const history=useHistory();
 
 
 
@@ -47,9 +47,15 @@ useEffect(()=>{
         
     })
 
-    socket?.emit('join',{username,room})
+    
+    socket?.emit('join',socket.id,username,room,(error)=>{
+        if(error){
+           console.log(error);
+           history.push('/')
+        }
+    })
 
-},[socket]);
+},[socket,messages]);
 
 // const clickHandler=()=>{
 //     console.log("clicked");
@@ -65,8 +71,7 @@ const getLocationHandler=()=>{
              socket.emit("geoLocation",{
                 Long:position.coords.longitude,
                 Latit:position.coords.latitude,
-                room,
-                username
+                id:socket.id
             })
         })
       
@@ -77,7 +82,7 @@ const submitHandler=(e)=>{
     e.preventDefault();
     
     setSending(true);
-    socket.emit("sendMessage",{message,room,username},(acknowledge)=>{
+    socket.emit("sendMessage",message,socket.id,(acknowledge)=>{
         setSending(false);
        
         console.log(`message has been ${acknowledge} successfully`);

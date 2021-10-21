@@ -1,10 +1,10 @@
 const users=[];
 
-const addUser=({id,username,room})=>{
-    username=username.trim().toLowerCase();
-    room=room.trim().toLowerCase();
-
-    if(!username||!room){
+const addUser=(id,username,room)=>{
+    // username=username.toLowerCase();
+    // room=room.trim().toLowerCase();
+    console.log(username,room,"utils")
+    if(!username || !room){
         return {
             error:"username and room field are required"
         }

@@ -5,6 +5,7 @@ const path=require("path");
 const server=http.createServer(app);
 const socketio=require("socket.io");
 const io=socketio(server);
+const {addUser,removeUser,getUsersInRoom,getUser}=require("../../client/src/utils/users")
 const port=process.env.PORT || 5000;
 
 app.use(express.static(path.resolve(__dirname, "../../client/build")));
@@ -24,13 +25,18 @@ io.on('connection',(socket)=>{
     
     socket.emit("countUpdated",count);
 
-    socket.on('join',({username,room})=>{
-        socket.join(room);
-        console.log(room,username)
+    socket.on('join',(id,username,room,next)=>{
+        const {error,user}=addUser(id,username,room);
+
+        if(error){
+            return next(error);
+        }
+        socket.join(user.room);
+        // console.log(room,username)
 
         socket.emit("message","welcome");
 
-        socket.broadcast.to(room).emit("message",`${username} has joined!`);
+        socket.broadcast.to(user.room).emit("message",`${user.username} has joined!`);
     })
 
     socket.on("increment",()=>{
@@ -39,27 +45,30 @@ io.on('connection',(socket)=>{
     });
 
     
-    socket.on("sendMessage",({message,room,username},next)=>{
+    socket.on("sendMessage",(message,id,next)=>{
         // io.emit("message",`type message is : ${message}`);
+        const user=getUser(id);
         let messageTime=new Date().toLocaleTimeString();
        
-        io.to(room).emit("messageArray",message,messageTime,username);
+        io.to(user.room).emit("messageArray",message,messageTime,username);
 
         next("Delivered!")
     })
 
+ 
 
     socket.on("geoLocation",(data)=>{
-        io.to(data.room).emit("sendLocationUrl",`https://google.com/maps?q=${data.Long},${data.Latit}`);
+        const user=getUser(data.id);
+        io.to(user.room).emit("sendLocationUrl",`https://google.com/maps?q=${data.Long},${data.Latit}`);
     });
 
 
-    socket.on("disconnect",()=>{
+    socket.on("disconnect",(id)=>{
+        const user=removeUser(id);
+        console.log(user,"iyv");
         io.emit("message","a user has left");
     })
 })
-
-
 
 
 
