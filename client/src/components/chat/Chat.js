@@ -10,7 +10,7 @@ const [messages,setMessages]=useState([]);
 const [locationLink,setLocationLink]=useState(undefined);
 const {username,room}=useParams();
 const history=useHistory();
-
+const id=username+room;
 
 
 
@@ -47,13 +47,18 @@ useEffect(()=>{
         
     })
 
+    // let id=socket?.id;
+    // console.log(id);
     
-    socket?.emit('join',socket.id,username,room,(error)=>{
+    socket?.emit('join',{username,id,room},(error)=>{
+        // console.log(socket.id);
         if(error){
            console.log(error);
            history.push('/')
         }
-    })
+    });
+
+    
 
 },[socket,messages]);
 
@@ -71,7 +76,7 @@ const getLocationHandler=()=>{
              socket.emit("geoLocation",{
                 Long:position.coords.longitude,
                 Latit:position.coords.latitude,
-                id:socket.id
+                id:id
             })
         })
       
@@ -82,7 +87,7 @@ const submitHandler=(e)=>{
     e.preventDefault();
     
     setSending(true);
-    socket.emit("sendMessage",message,socket.id,(acknowledge)=>{
+    socket.emit("sendMessage",message,id,username,room,(acknowledge)=>{
         setSending(false);
        
         console.log(`message has been ${acknowledge} successfully`);
