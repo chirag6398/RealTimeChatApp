@@ -5,7 +5,7 @@ const path=require("path");
 const server=http.createServer(app);
 const socketio=require("socket.io");
 const io=socketio(server);
-const {addUser,removeUser,getUsersInRoom,getUser}=require("../../client/src/utils/users")
+const {addUser,removeUser,getUsersInRoom,getUser}=require("./utils/users")
 const port=process.env.PORT || 5000;
 
 app.use(express.static(path.resolve(__dirname, "../../client/build")));
@@ -25,11 +25,9 @@ io.on('connection',(socket)=>{
     
     socket.emit("countUpdated",count);
 
-    socket.on('join',({username,id,room},next)=>{
+    socket.on('join',({username,room},next)=>{
 
-        const {error,user}=addUser(id,username,room);
-
-       
+        const {error,user}=addUser({id:socket.id,username,room});
 
         if(error){
             return next(error);
@@ -49,31 +47,31 @@ io.on('connection',(socket)=>{
    
 
     
-    socket.on("sendMessage",(message,id,username,room,next)=>{
+    socket.on("sendMessage",(message,username,room,next)=>{
        
-        const user=getUser(id);
+        const user=getUser(socket.id);
         console.log(user,"<<<<<<<<<<");
 
         let messageTime=new Date().toLocaleTimeString();
        
-        io.to(user.room).emit("messageArray",message,messageTime,username);
+        io.to(user?.room).emit("messageArray",message,messageTime,username);
 
-        next("Delivered!")
+        next("Delivered!");
     })
 
  
 
     socket.on("geoLocation",(data)=>{
-        const user=getUser(data.id);
+        const user=getUser(socket.id);
        
         io.to(user?.room).emit("sendLocationUrl",`https://google.com/maps?q=${data.Long},${data.Latit}`);
     });
 
 
-    socket.on("disconnect",(id)=>{
-        // const user=removeUser(id);
-        // console.log(user,"iyv");
-        io.emit("message","a user has left");
+    socket.on("disconnect",()=>{
+        const user=removeUser(socket.id);
+        
+        io.to(user?.room).emit("message","a user has left");
     })
 })
 

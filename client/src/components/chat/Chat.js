@@ -22,9 +22,9 @@ useEffect(()=>{
 
 useEffect(()=>{
 
-    socket?.on("countUpdated",(count)=>{
-        console.log("the count has been updated",count);
-    });
+    // socket?.on("countUpdated",(count)=>{
+    //     console.log("the count has been updated",count);
+    // });
 
     socket?.on("message",(message)=>{
         console.log(message);
@@ -32,7 +32,8 @@ useEffect(()=>{
 
     socket?.on("sendLocationUrl",(url)=>{
         setLocationLink(url);
-    })
+    });
+
     socket?.on("messageArray",(msg,msgTime,username)=>{
         let tm=msgTime.split(':');
         let isDay=tm[2].split(' ');
@@ -50,7 +51,7 @@ useEffect(()=>{
     // let id=socket?.id;
     // console.log(id);
     
-    socket?.emit('join',{username,id,room},(error)=>{
+    socket?.emit('join',{username,room},(error)=>{
         // console.log(socket.id);
         if(error){
            console.log(error);
@@ -75,8 +76,8 @@ const getLocationHandler=()=>{
              
              socket.emit("geoLocation",{
                 Long:position.coords.longitude,
-                Latit:position.coords.latitude,
-                id:id
+                Latit:position.coords.latitude
+                
             })
         })
       
@@ -87,7 +88,7 @@ const submitHandler=(e)=>{
     e.preventDefault();
     
     setSending(true);
-    socket.emit("sendMessage",message,id,username,room,(acknowledge)=>{
+    socket.emit("sendMessage",message,username,room,(acknowledge)=>{
         setSending(false);
        
         console.log(`message has been ${acknowledge} successfully`);
@@ -103,8 +104,9 @@ const submitHandler=(e)=>{
           
                 <div className="chat__messages">
                 {messages?.map((value)=>{
-                    return <div>{value.username}
-                    <span>{value.msg} {value.msgTime}</span>
+                    return <div className="message__box">{value.username}
+                    <p>{value.msg}</p>
+                    <p>{value.msgTime}</p>
                     </div>
                 })}
                 {

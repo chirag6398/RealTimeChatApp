@@ -1,9 +1,9 @@
 const users=[];
 
-const addUser=(id,username,room)=>{
+const addUser=({id,username,room})=>{
     // username=username.toLowerCase();
     // room=room.trim().toLowerCase();
-    // console.log(username,room,"utils")
+    // console.log(username,room,id,"utils")
 
     if(!username || !room){
         return {
@@ -47,12 +47,13 @@ const removeUser=(id)=>{
     const index=users.findIndex((user)=>{ 
           return user.id==id
     })
-    const user=undefined;
-    if(index !==-1){
-        user=users[index];
-       users.splice(index,1)[0];
+  
+    if(index !=-1){
+        
+        console.log(users[index])
+       return users.splice(index,1)[0];
     }
-    return user;
+   
 }
 
 module.exports={
