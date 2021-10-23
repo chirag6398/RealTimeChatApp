@@ -20,8 +20,6 @@ app.get("*", function (req, res) {
 let count=0;
 
 io.on('connection',(socket)=>{
-    console.log("new websocket connection");
-   
     
     socket.emit("countUpdated",count);
 
@@ -35,10 +33,7 @@ io.on('connection',(socket)=>{
 
         socket.join(user.room);
 
-
-        
-
-        socket.emit("message","welcome");
+        socket.emit("message","welcome!!!");
         socket.broadcast.to(user.room).emit("message",`${user.username} has joined!`);
 
         next();
@@ -50,7 +45,7 @@ io.on('connection',(socket)=>{
     socket.on("sendMessage",(message,username,room,next)=>{
        
         const user=getUser(socket.id);
-        console.log(user,"<<<<<<<<<<");
+       
 
         let messageTime=new Date().toLocaleTimeString();
        

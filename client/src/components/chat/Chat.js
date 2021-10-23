@@ -61,7 +61,7 @@ useEffect(()=>{
 
     
 
-},[socket,messages]);
+},[socket,messages,setMessages]);
 
 // const clickHandler=()=>{
 //     console.log("clicked");
@@ -104,9 +104,9 @@ const submitHandler=(e)=>{
           
                 <div className="chat__messages">
                 {messages?.map((value)=>{
-                    return <div className="message__box">{value.username}
-                    <p>{value.msg}</p>
-                    <p>{value.msgTime}</p>
+                    return <div className={value.username!=username?"message__box":"message__box message__box__right"} >{value.username}
+                    <p className="time__rightAlinged">{value.msg}</p>
+                    <p className="time__rightAlinged">{value.msgTime}</p>
                     </div>
                 })}
                 {
