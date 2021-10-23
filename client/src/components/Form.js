@@ -18,13 +18,13 @@ export default function Form() {
                 <label>
                     Usename
                 </label>
-                <input type="text" name="username" placeholder="your name" value={credentials?.username} required onChange={inputHandler}/>
+                <input type="text" name="username" placeholder="your name" value={credentials?.username} autoComplete="off" required onChange={inputHandler}/>
                 </fieldset>
                 <fieldset>
                 <label>
                     Room
                 </label>
-                <input type="text" name="room" placeholder="enter room" value={credentials?.room} required onChange={inputHandler}/>
+                <input type="text" name="room" placeholder="enter room" value={credentials?.room} required autoComplete="off" onChange={inputHandler}/>
                 </fieldset>
                 <button type="submit">join</button>
             </form>

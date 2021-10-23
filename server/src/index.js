@@ -10,19 +10,11 @@ const port=process.env.PORT || 5000;
 
 app.use(express.static(path.resolve(__dirname, "../../client/build")));
 
-
-
 app.get("*", function (req, res) {
     res.sendFile(path.resolve(__dirname, "../../client/build", "index.html"));
   });
   
-
-let count=0;
-
 io.on('connection',(socket)=>{
-    
-    socket.emit("countUpdated",count);
-
     socket.on('join',({username,room},next)=>{
 
         const {error,user}=addUser({id:socket.id,username,room});
@@ -39,14 +31,10 @@ io.on('connection',(socket)=>{
         next();
     })
 
-   
-
-    
     socket.on("sendMessage",(message,username,room,next)=>{
        
         const user=getUser(socket.id);
        
-
         let messageTime=new Date().toLocaleTimeString();
        
         io.to(user?.room).emit("messageArray",message,messageTime,username);
@@ -54,7 +42,6 @@ io.on('connection',(socket)=>{
         next("Delivered!");
     })
 
- 
 
     socket.on("geoLocation",(data)=>{
         const user=getUser(socket.id);
@@ -62,14 +49,12 @@ io.on('connection',(socket)=>{
         io.to(user?.room).emit("sendLocationUrl",`https://google.com/maps?q=${data.Long},${data.Latit}`);
     });
 
-
     socket.on("disconnect",()=>{
         const user=removeUser(socket.id);
         
         io.to(user?.room).emit("message","a user has left");
     })
 })
-
 
 
 server.listen(port,()=>{

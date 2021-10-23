@@ -10,7 +10,7 @@ const [messages,setMessages]=useState([]);
 const [locationLink,setLocationLink]=useState(undefined);
 const {username,room}=useParams();
 const history=useHistory();
-const id=username+room;
+
 
 
 
@@ -22,9 +22,7 @@ useEffect(()=>{
 
 useEffect(()=>{
 
-    // socket?.on("countUpdated",(count)=>{
-    //     console.log("the count has been updated",count);
-    // });
+    
 
     socket?.on("message",(message)=>{
         console.log(message);
@@ -32,6 +30,7 @@ useEffect(()=>{
 
     socket?.on("sendLocationUrl",(url)=>{
         setLocationLink(url);
+        autoScroll();
     });
 
     socket?.on("messageArray",(msg,msgTime,username)=>{
@@ -44,15 +43,16 @@ useEffect(()=>{
         newArray.push({msg,msgTime,username});
       
         setMessages(newArray);
+        autoScroll();
         console.log(messages)
         
-    })
+    });
 
-    // let id=socket?.id;
-    // console.log(id);
+
+    
     
     socket?.emit('join',{username,room},(error)=>{
-        // console.log(socket.id);
+        
         if(error){
            console.log(error);
            history.push('/')
@@ -63,10 +63,9 @@ useEffect(()=>{
 
 },[socket,messages,setMessages]);
 
-// const clickHandler=()=>{
-//     console.log("clicked");
-//     socket.emit("increment")
-// };
+
+
+
 
 const getLocationHandler=()=>{
     if(!navigator.geolocation){
@@ -82,6 +81,29 @@ const getLocationHandler=()=>{
         })
       
     }
+}
+
+const autoScroll=()=>{
+   console.log(messages.length);
+    
+    const messagePart=document.querySelector(".chat__messages");
+    const newMessage=messagePart.lastElementChild;
+    // const newMessageStyles=window.getComputedStyle(newMessage);
+    // const newMessageMargin=parseInt(newMessageStyles.marginBottom);
+    console.log(newMessage,messagePart);
+    const newMessageHeight=newMessage.offsetHeight + 10;
+
+    const visibleHeight=messagePart.offsetHeight;
+
+    const containerHeight=messagePart.scrollHeight;
+
+    const scrollOffset=messagePart.scrollTop+visibleHeight;
+
+    if(containerHeight-newMessageHeight<=scrollOffset){
+        messagePart.scrollTop=messagePart.scrollHeight;
+    }
+
+
 }
 
 const submitHandler=(e)=>{
@@ -105,8 +127,8 @@ const submitHandler=(e)=>{
                 <div className="chat__messages">
                 {messages?.map((value)=>{
                     return <div className={value.username!=username?"message__box":"message__box message__box__right"} >{value.username}
-                    <p className="time__rightAlinged">{value.msg}</p>
-                    <p className="time__rightAlinged">{value.msgTime}</p>
+                    <p className="time__rightAlinged" style={{fontWeight:"800"}}>{value.msg}</p>
+                    <p className="time__rightAlinged" style={{fontWeight:"bold",opacity:"0.7"}}>{value.msgTime}</p>
                     </div>
                 })}
                 {
@@ -116,7 +138,7 @@ const submitHandler=(e)=>{
                 <div className="chat__msg__bottom">
                     <div className="chat__inputForm">
                     <form onSubmit={submitHandler} >
-                 <input   type="text" placeholder="your message" value={message} onChange={(e)=>setMessage(e.target.value)} />
+                 <input   type="text" placeholder="your message" value={message} onChange={(e)=>setMessage(e.target.value)} required />
                  <button type="submit" disabled={sending} >{sending?"sending":"send"}</button>
                  </form>
                     </div>
@@ -125,9 +147,6 @@ const submitHandler=(e)=>{
                </div>
                 
                 </div>
-                {/* <button id="increment" onClick={clickHandler} >increment</button> */}
-                
-                 
                 
             </div>
             
