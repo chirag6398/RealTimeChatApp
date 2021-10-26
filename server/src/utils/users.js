@@ -50,7 +50,7 @@ const removeUser=(id)=>{
   
     if(index !=-1){
         
-        console.log(users[index])
+        
        return users.splice(index,1)[0];
     }
    

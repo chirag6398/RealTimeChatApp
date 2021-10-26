@@ -31,7 +31,6 @@
             flex-direction: column;
             flex: 1;
             overflow-y: scroll;
-            
             font-size: large;
             &::-webkit-scrollbar{
                 display: none;
@@ -39,7 +38,7 @@
             .chat__sideBar__user{
                 display: flex;
                 flex-direction: row;
-                justify-content: center;
+                padding-left: 20px;
                 align-items: center;
                 cursor: pointer;
                 flex: 1;

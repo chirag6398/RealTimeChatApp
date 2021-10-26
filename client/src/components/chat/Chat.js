@@ -37,7 +37,7 @@ useEffect(()=>{
     socket?.on("roomData",({room,users})=>{
         setRoomData(users);
         setRoomName(room);
-        // console.log(room,users);
+       
     })
 
     socket?.on("messageArray",(msg,msgTime,username)=>{
@@ -50,7 +50,7 @@ useEffect(()=>{
       
         setMessages([...messages,{msg,msgTime,username}]);
         autoScroll();
-        console.log(messages)
+       
         
     });
 
@@ -83,7 +83,7 @@ useEffect(()=>{
       
         setMessages([...messages,{msg,msgTime,username}]);
         autoScroll();
-        console.log(messages)
+       
         
     });
 
@@ -153,13 +153,10 @@ const submitHandler=(e)=>{
                </div>
                <div className="chat__sideBar__users">
                    {roomData?.map((data)=>{
-                       console.log(data.username.length);
                        let name=data.username;
                        if(data.username.length>=15){
-                           console.log(name);
-                            name=username.substring(0,15);
+                            name=data.username.substring(0,15);
                             name=name+"...";
-                            console.log(name);
                        }
                        return <div className="chat__sideBar__user">
                            <p className="chat__user">
@@ -173,8 +170,12 @@ const submitHandler=(e)=>{
           
                 <div className="chat__messages">
                 {messages?.map((value)=>{
-                    
-                    return <div className={value.username!=username?"message__box":"message__box message__box__right"} >{value.username}
+                    let name=value.username;
+                    if(value.username.length>=15){
+                         name=value.username.substring(0,15);
+                         name=name+"...";
+                    }
+                    return <div className={value.username!=username?"message__box":"message__box message__box__right"} >{name}
                     <p className="time__rightAlinged" style={{fontWeight:"800"}}>{value.msg}</p>
                     <p className="time__rightAlinged" style={{fontWeight:"bold",opacity:"0.7"}}>{value.msgTime}</p>
                     </div>
