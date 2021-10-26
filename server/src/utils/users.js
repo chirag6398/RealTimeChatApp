@@ -28,7 +28,7 @@ const addUser=({id,username,room})=>{
 }
 
 const getUser=(id)=>{
-    console.log(users,id,"utttttt")
+    
     let ind=users.findIndex((user)=>{
         return user.id===id;
     })
@@ -38,7 +38,7 @@ const getUser=(id)=>{
 
 const getUsersInRoom=(room)=>{
     return users.filter((user)=>{
-        user.room==room
+       return user.room===room
     })
 }
 

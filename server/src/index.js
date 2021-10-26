@@ -18,23 +18,27 @@ io.on('connection',(socket)=>{
     socket.on('join',({username,room},next)=>{
 
         const {error,user}=addUser({id:socket.id,username,room});
-
+       
         if(error){
             return next(error);
         }
 
         socket.join(user.room);
-
+       
         socket.emit("message","welcome!!!");
+        io.to(user?.room).emit("roomData",{
+            room:user.room,
+            users:getUsersInRoom(user.room)
+        })
         socket.broadcast.to(user.room).emit("message",`${user.username} has joined!`);
 
         next();
     })
 
-    socket.on("sendMessage",(message,username,room,next)=>{
+    socket.on("sendMessage",({message,username},next)=>{
        
         const user=getUser(socket.id);
-       
+        console.log(user);
         let messageTime=new Date().toLocaleTimeString();
        
         io.to(user?.room).emit("messageArray",message,messageTime,username);
@@ -51,9 +55,15 @@ io.on('connection',(socket)=>{
 
     socket.on("disconnect",()=>{
         const user=removeUser(socket.id);
+        if(user){
+            io.to(user?.room).emit("message",`${user?.username} has left`);
+            io.to(user?.room).emit("roomData",{
+                room:user.room,
+                users:getUsersInRoom(user?.room)
+            })
+        }
         
-        io.to(user?.room).emit("message","a user has left");
-    })
+    });
 })
 
 

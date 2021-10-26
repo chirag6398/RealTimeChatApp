@@ -7,6 +7,8 @@ const [socket,setSocket]=useState(null);
 const [message,setMessage]=useState("");
 const [sending,setSending]=useState(false);
 const [messages,setMessages]=useState([]);
+const [roomName,setRoomName]=useState("");
+const [roomData,setRoomData]=useState();
 const [locationLink,setLocationLink]=useState(undefined);
 const {username,room}=useParams();
 const history=useHistory();
@@ -16,9 +18,8 @@ const history=useHistory();
 
 useEffect(()=>{
     setSocket(io("ws://localhost:5000"));
-
-    
 },[]);
+
 
 useEffect(()=>{
 
@@ -33,16 +34,22 @@ useEffect(()=>{
         autoScroll();
     });
 
+    socket?.on("roomData",({room,users})=>{
+        setRoomData(users);
+        setRoomName(room);
+        // console.log(room,users);
+    })
+
     socket?.on("messageArray",(msg,msgTime,username)=>{
         let tm=msgTime.split(':');
         let isDay=tm[2].split(' ');
 
         msgTime=`${tm[0]}:${tm[1]} ${isDay[1]}`;
         
-        let newArray=messages;
-        newArray.push({msg,msgTime,username});
+        // let newArray=messages;
+        // newArray.push({msg,msgTime,username});
       
-        setMessages(newArray);
+        setMessages([...messages,{msg,msgTime,username}]);
         autoScroll();
         console.log(messages)
         
@@ -53,10 +60,10 @@ useEffect(()=>{
     
     socket?.emit('join',{username,room},(error)=>{
         
-        if(error){
-           console.log(error);
-           history.push('/')
-        }
+        // if(error){
+        //    console.log(error);
+        //    history.push('/')
+        // }
     });
 
     
@@ -84,13 +91,12 @@ const getLocationHandler=()=>{
 }
 
 const autoScroll=()=>{
-   console.log(messages.length);
-    
+  
     const messagePart=document.querySelector(".chat__messages");
     const newMessage=messagePart.lastElementChild;
     // const newMessageStyles=window.getComputedStyle(newMessage);
     // const newMessageMargin=parseInt(newMessageStyles.marginBottom);
-    console.log(newMessage,messagePart);
+    // console.log(newMessage,messagePart);
     const newMessageHeight=newMessage.offsetHeight + 10;
 
     const visibleHeight=messagePart.offsetHeight;
@@ -110,7 +116,7 @@ const submitHandler=(e)=>{
     e.preventDefault();
     
     setSending(true);
-    socket.emit("sendMessage",message,username,room,(acknowledge)=>{
+    socket.emit("sendMessage",{message,username},(acknowledge)=>{
         setSending(false);
        
         console.log(`message has been ${acknowledge} successfully`);
@@ -121,7 +127,20 @@ const submitHandler=(e)=>{
 }
     return (
         <div className="chat__extDiv">
-            <div className="chat__sideBar"></div>
+            <div className="chat__sideBar">
+               <div className="chat__sideBar__heading">
+                   <p>{roomName}</p>
+               </div>
+               <div className="chat__sideBar__users">
+                   {roomData?.map((data)=>{
+                       return <div className="chat__sideBar__user">
+                           <p className="chat__user">
+                               {data.username}
+                           </p>
+                       </div>
+                   })}
+               </div>
+            </div>
             <div className="chat__msgPart">
           
                 <div className="chat__messages">
