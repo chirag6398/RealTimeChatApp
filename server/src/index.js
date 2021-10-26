@@ -38,14 +38,13 @@ io.on('connection',(socket)=>{
     socket.on("sendMessage",({message,username},next)=>{
        
         const user=getUser(socket.id);
-        console.log(user);
+       
         let messageTime=new Date().toLocaleTimeString();
        
         io.to(user?.room).emit("messageArray",message,messageTime,username);
 
         next("Delivered!");
     })
-
 
     socket.on("geoLocation",(data)=>{
         const user=getUser(socket.id);

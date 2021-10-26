@@ -46,8 +46,7 @@ useEffect(()=>{
 
         msgTime=`${tm[0]}:${tm[1]} ${isDay[1]}`;
         
-        // let newArray=messages;
-        // newArray.push({msg,msgTime,username});
+        
       
         setMessages([...messages,{msg,msgTime,username}]);
         autoScroll();
@@ -60,15 +59,38 @@ useEffect(()=>{
     
     socket?.emit('join',{username,room},(error)=>{
         
-        // if(error){
-        //    console.log(error);
-        //    history.push('/')
-        // }
+        if(error){
+           console.log(error);
+           history.push('/')
+        }
     });
 
     
 
+},[socket]);
+
+
+
+useEffect(()=>{
+
+    socket?.on("messageArray",(msg,msgTime,username)=>{
+        let tm=msgTime.split(':');
+        let isDay=tm[2].split(' ');
+
+        msgTime=`${tm[0]}:${tm[1]} ${isDay[1]}`;
+        
+        
+      
+        setMessages([...messages,{msg,msgTime,username}]);
+        autoScroll();
+        console.log(messages)
+        
+    });
+
+
+
 },[socket,messages,setMessages]);
+
 
 
 
@@ -94,9 +116,7 @@ const autoScroll=()=>{
   
     const messagePart=document.querySelector(".chat__messages");
     const newMessage=messagePart.lastElementChild;
-    // const newMessageStyles=window.getComputedStyle(newMessage);
-    // const newMessageMargin=parseInt(newMessageStyles.marginBottom);
-    // console.log(newMessage,messagePart);
+   
     const newMessageHeight=newMessage.offsetHeight + 10;
 
     const visibleHeight=messagePart.offsetHeight;
@@ -133,9 +153,17 @@ const submitHandler=(e)=>{
                </div>
                <div className="chat__sideBar__users">
                    {roomData?.map((data)=>{
+                       console.log(data.username.length);
+                       let name=data.username;
+                       if(data.username.length>=15){
+                           console.log(name);
+                            name=username.substring(0,15);
+                            name=name+"...";
+                            console.log(name);
+                       }
                        return <div className="chat__sideBar__user">
                            <p className="chat__user">
-                               {data.username}
+                               {name}
                            </p>
                        </div>
                    })}
@@ -145,6 +173,7 @@ const submitHandler=(e)=>{
           
                 <div className="chat__messages">
                 {messages?.map((value)=>{
+                    
                     return <div className={value.username!=username?"message__box":"message__box message__box__right"} >{value.username}
                     <p className="time__rightAlinged" style={{fontWeight:"800"}}>{value.msg}</p>
                     <p className="time__rightAlinged" style={{fontWeight:"bold",opacity:"0.7"}}>{value.msgTime}</p>

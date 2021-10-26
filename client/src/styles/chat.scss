@@ -9,14 +9,52 @@
     .chat__sideBar{
         flex: 0.3;
         display: flex;
+        flex-direction: column;
+        font-family: 'Times New Roman', Times, serif;
+        color: white;
         height: 90%;
         background-color:$side-bar-color;
         overflow-y: scroll;
         margin-left: 10px;
         min-width: 271px;
+
+       .chat__sideBar__heading{
+            display: flex;
+            height: 60px;
+            justify-content: center;
+            align-items: center;
+            background-color: #15085a;
+            font-size: x-large;
+        }
+        .chat__sideBar__users{
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            overflow-y: scroll;
+            
+            font-size: large;
+            &::-webkit-scrollbar{
+                display: none;
+            }
+            .chat__sideBar__user{
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                flex: 1;
+                max-height: 60px;
+                transition: 1s all ease-in-out;
+                justify-content: flex-start;
+                &:hover{
+                  background-color: #15085a;
+                }
+        }}
         &::-webkit-scrollbar{
             display: none;
         }
+
+
     }
     .chat__msgPart{
         flex:0.7;
