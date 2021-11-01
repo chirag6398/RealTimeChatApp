@@ -1,5 +1,7 @@
 import React,{useState} from 'react'
 import { useHistory } from 'react-router'
+import "../styles/form.scss";
+
 export default function Form() {
     const [credentials,setCredentials]=useState({});
     const history=useHistory();
@@ -12,22 +14,29 @@ export default function Form() {
         history.push(`/chat/${credentials.username}/${credentials.room}`);
     }
     return (
-        <div>
-            <form onSubmit={submitHandler}>
-                <fieldset>
-                <label>
-                    Usename
-                </label>
-                <input type="text" name="username" placeholder="your name" value={credentials?.username} autoComplete="off" required onChange={inputHandler}/>
-                </fieldset>
-                <fieldset>
-                <label>
-                    Room
-                </label>
-                <input type="text" name="room" placeholder="enter room" value={credentials?.room} required autoComplete="off" onChange={inputHandler}/>
-                </fieldset>
-                <button type="submit">join</button>
-            </form>
+        <div className="form__extDiv">
+            <div className="form__container">
+                <form onSubmit={submitHandler}>
+                    <fieldset>
+                        <legend>
+                            <label>
+                            Usename
+                            </label>
+                        </legend>
+                        <input type="text" name="username" placeholder="your name" value={credentials?.username} autoComplete="off" required onChange={inputHandler}/>
+
+                    </fieldset>
+                    <fieldset>
+                        <legend>
+                        <label>
+                            Room
+                        </label>
+                    </legend>
+                            <input type="text" name="room" placeholder="enter room" value={credentials?.room} required autoComplete="off" onChange={inputHandler}/>
+                    </fieldset>
+                    <button type="submit">join</button>
+                </form>
+            </div>
         </div>
     )
 }

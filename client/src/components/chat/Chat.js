@@ -177,7 +177,7 @@ const submitHandler=(e)=>{
                     return <div className={value.username!=username?"message__box":"message__box message__box__right"} >{name}
                     {
                     value?.msg ? <p className="time__rightAlinged" style={{fontWeight:"800"}}>{value.msg}</p>:
-                    <a href={value?.url} target="_blank">The current Location</a>
+                    <a href={value?.url} target="_blank"  >The current Location</a>
                     }
                     <p className="time__rightAlinged" style={{fontWeight:"bold",opacity:"0.7"}}>{value.msgTime}</p>
                     </div>
