@@ -9,7 +9,6 @@ const [sending,setSending]=useState(false);
 const [messages,setMessages]=useState([]);
 const [roomName,setRoomName]=useState("");
 const [roomData,setRoomData]=useState();
-const [locationLink,setLocationLink]=useState(undefined);
 const {username,room}=useParams();
 const history=useHistory();
 
@@ -29,10 +28,7 @@ useEffect(()=>{
         console.log(message);
     });
 
-    socket?.on("sendLocationUrl",(url)=>{
-        setLocationLink(url);
-        autoScroll();
-    });
+   
 
     socket?.on("roomData",({room,users})=>{
         setRoomData(users);
@@ -40,20 +36,7 @@ useEffect(()=>{
        
     })
 
-    socket?.on("messageArray",(msg,msgTime,username)=>{
-        let tm=msgTime.split(':');
-        let isDay=tm[2].split(' ');
-
-        msgTime=`${tm[0]}:${tm[1]} ${isDay[1]}`;
-        
-        
-      
-        setMessages([...messages,{msg,msgTime,username}]);
-        autoScroll();
-       
-        
-    });
-
+   
 
     
     
@@ -73,6 +56,20 @@ useEffect(()=>{
 
 useEffect(()=>{
 
+    socket?.on("sendLocationUrl",(url,msgTime,username)=>{
+        
+      
+        let tm=msgTime.split(':');
+        let isDay=tm[2].split(' ');
+
+        msgTime=`${tm[0]}:${tm[1]} ${isDay[1]}`;
+        
+        
+      
+        setMessages([...messages,{url,msgTime,username}]);
+        autoScroll();
+    });
+
     socket?.on("messageArray",(msg,msgTime,username)=>{
         let tm=msgTime.split(':');
         let isDay=tm[2].split(' ');
@@ -86,6 +83,8 @@ useEffect(()=>{
        
         
     });
+
+    console.log(messages);
 
 
 
@@ -176,13 +175,14 @@ const submitHandler=(e)=>{
                          name=name+"...";
                     }
                     return <div className={value.username!=username?"message__box":"message__box message__box__right"} >{name}
-                    <p className="time__rightAlinged" style={{fontWeight:"800"}}>{value.msg}</p>
+                    {
+                    value?.msg ? <p className="time__rightAlinged" style={{fontWeight:"800"}}>{value.msg}</p>:
+                    <a href={value?.url} target="_blank">The current Location</a>
+                    }
                     <p className="time__rightAlinged" style={{fontWeight:"bold",opacity:"0.7"}}>{value.msgTime}</p>
                     </div>
                 })}
-                {
-                    locationLink?<a href={locationLink.toString()} target="_blank">The current Location</a>:null
-                }
+              
                 </div>
                 <div className="chat__msg__bottom">
                     <div className="chat__inputForm">

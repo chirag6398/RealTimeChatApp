@@ -46,10 +46,11 @@ io.on('connection',(socket)=>{
         next("Delivered!");
     })
 
+    
     socket.on("geoLocation",(data)=>{
         const user=getUser(socket.id);
-       
-        io.to(user?.room).emit("sendLocationUrl",`https://google.com/maps?q=${data.Long},${data.Latit}`);
+        let messageTime=new Date().toLocaleTimeString();
+        io.to(user?.room).emit("sendLocationUrl",`https://google.com/maps?q=${data.Long},${data.Latit}`,messageTime,user?.username);
     });
 
     socket.on("disconnect",()=>{
@@ -64,6 +65,7 @@ io.on('connection',(socket)=>{
         
     });
 })
+
 
 
 server.listen(port,()=>{
