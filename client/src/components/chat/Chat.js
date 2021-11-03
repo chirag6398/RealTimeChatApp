@@ -2,18 +2,41 @@ import React,{useState,useEffect} from 'react';
 import {io} from "socket.io-client";
 import { useParams,useHistory } from 'react-router';
 import "../../styles/chat.scss";
+import { VscListFlat } from "react-icons/vsc";
 export default function Chat() {
 const [socket,setSocket]=useState(null);
 const [message,setMessage]=useState("");
 const [sending,setSending]=useState(false);
 const [messages,setMessages]=useState([]);
 const [roomName,setRoomName]=useState("");
+const [isMobileView,setIsMovileView]=useState(()=>{
+    if(window.innerWidth<=670)return true;
+    return false;
+});
 const [roomData,setRoomData]=useState();
 const {username,room}=useParams();
 const history=useHistory();
 
 
+const windowSizeHandler=()=>{
 
+    
+    if(window.innerWidth<=670 && !isMobileView){
+        setIsMovileView(true);
+    }else if(window.innerWidth>670 && isMobileView){
+        setIsMovileView(false);
+    }
+
+    console.log(isMobileView,window.innerWidth)
+}
+
+useEffect(()=>{
+    window.addEventListener("resize",windowSizeHandler);
+
+    return ()=>{
+        window.removeEventListener("resize",windowSizeHandler);
+    }
+},[windowSizeHandler])
 
 useEffect(()=>{
     setSocket(io("ws://localhost:5000"));
@@ -146,25 +169,33 @@ const submitHandler=(e)=>{
 }
     return (
         <div className="chat__extDiv">
-            <div className="chat__sideBar">
-               <div className="chat__sideBar__heading">
-                   <p>{roomName}</p>
-               </div>
-               <div className="chat__sideBar__users">
-                   {roomData?.map((data)=>{
-                       let name=data.username;
-                       if(data.username.length>=15){
-                            name=data.username.substring(0,15);
-                            name=name+"...";
-                       }
-                       return <div className="chat__sideBar__user">
-                           <p className="chat__user">
-                               {name}
-                           </p>
-                       </div>
-                   })}
-               </div>
-            </div>
+            {
+                !isMobileView?
+                <div className="chat__sideBar">
+                <div className="chat__sideBar__heading">
+                    <p>{roomName}</p>
+                </div>
+                <div className="chat__sideBar__users">
+                    {roomData?.map((data)=>{
+                        let name=data.username;
+                        if(data.username.length>=15){
+                             name=data.username.substring(0,15);
+                             name=name+"...";
+                        }
+                        return <div className="chat__sideBar__user">
+                            <p className="chat__user">
+                                {name}
+                            </p>
+                        </div>
+                    })}
+                </div>
+             </div>:
+             <div style={{padding:"10px"}}>
+                 <VscListFlat className="toggleIcon" />
+             </div>
+            }
+           
+            
             <div className="chat__msgPart">
           
                 <div className="chat__messages">
