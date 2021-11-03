@@ -41,7 +41,7 @@ useEffect(()=>{
 },[windowSizeHandler])
 
 useEffect(()=>{
-    setSocket(io("ws://localhost:5000"));
+    setSocket(io("ws:https://real-time-chat-using-socket.herokuapp.com/"));
 },[]);
 
 
