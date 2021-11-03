@@ -9,6 +9,7 @@ const [message,setMessage]=useState("");
 const [sending,setSending]=useState(false);
 const [messages,setMessages]=useState([]);
 const [roomName,setRoomName]=useState("");
+const [isToggle,setIsToggle]=useState(false);
 const [isMobileView,setIsMovileView]=useState(()=>{
     if(window.innerWidth<=670)return true;
     return false;
@@ -25,9 +26,10 @@ const windowSizeHandler=()=>{
         setIsMovileView(true);
     }else if(window.innerWidth>670 && isMobileView){
         setIsMovileView(false);
+        setIsToggle(false);
     }
 
-    console.log(isMobileView,window.innerWidth)
+   
 }
 
 useEffect(()=>{
@@ -153,7 +155,9 @@ const autoScroll=()=>{
 
 
 }
-
+const toggleHandler=()=>{
+    setIsToggle(!isToggle);
+}
 const submitHandler=(e)=>{
     e.preventDefault();
     
@@ -167,10 +171,15 @@ const submitHandler=(e)=>{
     setMessage("");
 
 }
-    return (
+    return (<div className="chatPage">
+        {
+            isMobileView?<div style={{padding:"10px"}}>
+            <VscListFlat onClick={toggleHandler} className="toggleIcon" />
+        </div>:null
+        }
         <div className="chat__extDiv">
             {
-                !isMobileView?
+                !isMobileView || isToggle?
                 <div className="chat__sideBar">
                 <div className="chat__sideBar__heading">
                     <p>{roomName}</p>
@@ -190,13 +199,13 @@ const submitHandler=(e)=>{
                     })}
                 </div>
              </div>:
-             <div style={{padding:"10px"}}>
-                 <VscListFlat className="toggleIcon" />
-             </div>
+             null
             }
-           
-            
-            <div className="chat__msgPart">
+
+
+            {
+                !isToggle?
+                <div className="chat__msgPart">
           
                 <div className="chat__messages">
                 {messages?.map((value)=>{
@@ -229,10 +238,17 @@ const submitHandler=(e)=>{
                 </div>
                 
             </div>
+                :null
+            }
+           
+            
+            
             
            
            
         </div>
+    </div>
+       
     )
 }
 
