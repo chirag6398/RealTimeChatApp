@@ -44,7 +44,7 @@ useEffect(()=>{
 
 useEffect(()=>{
     // setSocket(io("ws:https://real-time-chat-using-socket.herokuapp.com/"));
-    setSocket(io(`https://${window.location.hostname}:5000`));
+    setSocket(io(`https://${window.location.hostname}`));
 },[]);
 
 
@@ -52,9 +52,9 @@ useEffect(()=>{
 
     
 
-    socket?.on("message",(message)=>{
-        console.log(message);
-    });
+    // socket?.on("message",(message)=>{
+    //     console.log(message);
+    // });
 
    
 
@@ -71,7 +71,7 @@ useEffect(()=>{
     socket?.emit('join',{username,room},(error)=>{
         
         if(error){
-           console.log(error);
+           alert(error)
            history.push('/')
         }
     });
@@ -112,8 +112,6 @@ useEffect(()=>{
         
     });
 
-    console.log(messages);
-
 
 
 },[socket,messages,setMessages]);
@@ -125,7 +123,7 @@ useEffect(()=>{
 
 const getLocationHandler=()=>{
     if(!navigator.geolocation){
-        console.log("can not access location");
+       SpeechRecognitionAlternative("can not access location");
     }else{
         navigator.geolocation.getCurrentPosition((position)=>{
              
@@ -168,7 +166,7 @@ const submitHandler=(e)=>{
     socket.emit("sendMessage",{message,username},(acknowledge)=>{
         setSending(false);
        
-        console.log(`message has been ${acknowledge} successfully`);
+        // console.log(`message has been ${acknowledge} successfully`);
     });
   
     setMessage("");
