@@ -123,7 +123,7 @@ useEffect(()=>{
 
 const getLocationHandler=()=>{
     if(!navigator.geolocation){
-       SpeechRecognitionAlternative("can not access location");
+       alert("can not access location");
     }else{
         navigator.geolocation.getCurrentPosition((position)=>{
              
