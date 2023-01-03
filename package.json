@@ -8,7 +8,7 @@
   "main": "index.js",
   "scripts": {
     "client": "npm start --prefix client",
-    "start": "node index.js",
+    "start": "node ./src/index.js",
     "dev": "concurrently \"npm start \" \"npm run client\" "
   },
   "author": "chirag",
