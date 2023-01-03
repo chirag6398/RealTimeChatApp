@@ -2,8 +2,9 @@ const express=require("express");
 const app=express();
 const http=require("http");
 const path=require("path");
+const dotenv=require("dotenv");
 const server=http.createServer(app);
-
+dotenv.config({ path: "./config.env" });
 const socketio=require("socket.io");
 
 const io=socketio(server);

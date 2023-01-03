@@ -7,13 +7,14 @@
   },
   "main": "index.js",
   "scripts": {
-    "client":"npm start --prefix client",
+    "client": "npm start --prefix client",
     "start": "node index.js",
-    "dev":"concurrently \"npm start \" \"npm run client\" "
+    "dev": "concurrently \"npm start \" \"npm run client\" "
   },
   "author": "chirag",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.0.3",
     "express": "^4.17.1",
     "socket.io": "^4.2.0"
   },
